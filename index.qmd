@@ -11,9 +11,3 @@ This website contains resources and posts for the Betadiag project.
 
 ![](Aspen2.jpg)
 
-## Posts
-
-```{.listing}
-type: default
-contents: posts
-```
