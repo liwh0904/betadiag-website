@@ -9,5 +9,5 @@ page-layout: article
 
 This website contains resources and posts for the Betadiag project.
 
-![](Aspen2.jpg)
+![](Joshua.JPG)
 
