@@ -1,0 +1,19 @@
+
+---
+title: "Diagnostics and Remedy Tools for Beta Diversity Analysis"
+format: html
+page-layout: article
+---
+
+# Welcome to Betadiag
+
+This website contains resources and posts for the Betadiag project.
+
+![](Aspen2.jpg)
+
+## Posts
+
+```{.listing}
+type: default
+contents: posts
+```

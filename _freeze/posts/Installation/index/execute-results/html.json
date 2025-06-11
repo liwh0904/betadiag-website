@@ -1,0 +1,15 @@
+{
+  "hash": "849bc13d44798a13cd4a7a86475d7aeb",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Installation\"\nauthor: \"Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang\"\ndate: \"2025-06-10\"\ncategories: [news]\n---\nTo install the development version of Betadiag from GitHub:\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Install devtools if not already installed\n# install.packages(\"devtools\")\nlibrary(devtools)\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nLoading required package: usethis\n```\n\n\n:::\n\n```{.r .cell-code}\ndevtools::install_github(\"bioscinema/Betadiag\")\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nSkipping install of 'Betadiag' from a github remote, the SHA1 (fabfe08b) has not changed since last install.\n  Use `force = TRUE` to force installation\n```\n\n\n:::\n\n```{.r .cell-code}\nlibrary(Betadiag)\n```\n:::\n\n\nYou can also use Betadiag through our web-based Shiny app.\nSimply upload or paste your distance matrix and metadata to run diagnostics directly in your browser — no installation needed, and no data is saved.\n\n![](thumbnail.jpg)\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

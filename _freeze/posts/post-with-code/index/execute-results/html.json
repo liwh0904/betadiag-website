@@ -1,0 +1,17 @@
+{
+  "hash": "8c4e7cd2d454f9262848ffb2eb3583c4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"End-to-end demo: weighted UniFrac on IBD 16S data\"\nauthor: \"Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang\"\ndate: \"2025-06-10\"\ncategories: [news, code, analysis]\nimage: \"DSC09100.jpg\"\n---\n\nThis is a post with executable code.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Install Betadiag (dev) and dependencies ---------------------------------\n# install.packages(\"devtools\")\nlibrary(devtools)\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nLoading required package: usethis\n```\n\n\n:::\n\n```{.r .cell-code}\n#devtools::install_github(\"bioscinema/Betadiag\")\n```\n:::\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n## Using GitHub PAT from the git credential store.\n\n## Skipping install of 'Betadiag' from a github remote, the SHA1 (bf9bbd2c) has not changed since last install.\n##   Use `force = TRUE` to force installation\n```\n:::\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n## Using GitHub PAT from the git credential store.\n\n## Skipping install of 'Betadiag' from a github remote, the SHA1 (bf9bbd2c) has not changed since last install.\n##   Use `force = TRUE` to force installation\nlibrary(Betadiag)\nlibrary(phyloseq)\nlibrary(ggplot2)\n\n# Load dataset ------------------------------------------------------------\nload(\"RealData/IBD_16s_data_V4.RData\")\n\n# ---- Data cleaning ------------------------------------------------------\nsample_data <- sample_data(phy1)\nrows_with_na <- apply(\n  sample_data[, c(1, 18, 50, 57, 115, 126, 127)],\n  1,\n  function(x) any(x %in% c(\"not providednot provided\",\n                           \"-88\",\n                           \"not provided\",\n                           \"cd (from uc 7/17/2018)\"))\n)\nphyseq <- prune_samples(!rows_with_na, phy1)\n\nmetadata <- data.frame(\n  diagnosis         = as.factor(physeq@sam_data$diagnosis),\n  age_at_diagnosis  = as.numeric(physeq@sam_data$age_at__diagnosis),\n  host_age          = as.numeric(physeq@sam_data$host_age),\n  host_height       = as.numeric(physeq@sam_data$host_height),\n  race              = physeq@sam_data$race,\n  sex               = as.numeric(ifelse(physeq@sam_data$sex == \"male\", 1, 0)),\n  smoking           = as.numeric(ifelse(physeq@sam_data$smoking == \"n\", 0, 1))\n)\n\n# ---- Diagnostics --------------------------------------------------------\nwu_dist   <- phyloseq::distance(physeq, method = \"wunifrac\")\nwu_matrix <- as.matrix(wu_dist)\n\nwu.check <- check_distance(wu_matrix)\nwu.check$is.metric\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 0\n```\n\n\n:::\n:::\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nwu.check$is.Euclidean\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 0\n```\n\n\n:::\n:::\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nwu.check$FNI\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 0.1180882\n```\n\n\n:::\n:::\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(wu.check$collinearity.score,xlab = \"Sample\",ylab = \"Collinearity Score\") \n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-6-1.png){width=672}\n:::\n:::\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
