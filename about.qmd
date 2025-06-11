@@ -1,6 +1,6 @@
 ---
 title: "Betadiag"
-image: Aspen.jpg
+image: earth.jpg
 about:
   template: jolla
   links:
