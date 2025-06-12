@@ -1,0 +1,12 @@
+---
+title: "Introduction"
+#author: "Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang"
+#date: "2025-06-10"
+#categories: [news]
+---
+
+Betadiag is an R package designed to diagnose, evaluate, and correct issues in beta diversity analysis, particularly when working with dissimilarity matrices from ecological and microbiome studies. It provides tools to assess matrix properties, perform ordination and statistical evaluation, and apply remedies to ensure valid analysis.
+
+![](Vancover.jpg)
+
+
