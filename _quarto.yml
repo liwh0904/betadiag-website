@@ -8,11 +8,11 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: posts/Introduction/index.qmd
+      - href: posts/Introduction/Introduction.qmd
         text: Introduction
-      - href: Installation.qmd
+      - href: posts/Installation/Installation.qmd
         text: Installation
-      - href: posts/post-with-code/index.qmd
+      - href: posts/post-with-code/Example_code.qmd
         text: End-to-end demo
 
 format:
