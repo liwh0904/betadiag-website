@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Diagnostics and Remedy Tools for Beta Diversity Analysis",
     "section": "",
-    "text": "Welcome to Betadiag\nThis website contains resources and posts for the Betadiag project."
+    "text": "Welcome to Betadiag\nThis website contains resources and posts for the Betadiag project. The website also contains the code for the paper ‘Enhanced Pattern Recognition and Biomarker Identification through Beta Diversity Analysis in Microbiome Data’ by Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang."
   },
   {
     "objectID": "index.html#posts",
@@ -40,5 +40,12 @@
     "title": "Betadiag",
     "section": "",
     "text": "The code for the paper ‘Enhanced Pattern Recognition and Biomarker Identification through Beta Diversity Analysis in Microbiome Data’."
+  },
+  {
+    "objectID": "Installation.html",
+    "href": "Installation.html",
+    "title": "Installation",
+    "section": "",
+    "text": "To install the development version of Betadiag from GitHub:\n\n# Install devtools if not already installed\n# install.packages(\"devtools\")\nlibrary(devtools)\n\nLoading required package: usethis\n\ndevtools::install_github(\"bioscinema/Betadiag\")\n\nUsing GitHub PAT from the git credential store.\n\n\nSkipping install of 'Betadiag' from a github remote, the SHA1 (fabfe08b) has not changed since last install.\n  Use `force = TRUE` to force installation\n\nlibrary(Betadiag)\n\nYou can also use Betadiag through our web-based Shiny app. Simply upload or paste your distance matrix and metadata to run diagnostics directly in your browser — no installation needed, and no data is saved."
   }
 ]
