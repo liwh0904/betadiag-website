@@ -8,10 +8,10 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: about.qmd
-        text: About
       - href: posts/Introduction/index.qmd
         text: Introduction
+      - href: Installation.qmd
+        text: Installation
       - href: posts/post-with-code/index.qmd
         text: End-to-end demo
 

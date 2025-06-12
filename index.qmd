@@ -7,7 +7,15 @@ page-layout: article
 
 # Welcome to Betadiag
 
-This website contains resources and posts for the Betadiag project.
+This website contains resources and posts for the Betadiag project. The website also contains the code for the paper 'Enhanced Pattern Recognition and Biomarker Identification through Beta Diversity Analysis in Microbiome Data' by Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang.
 
-![](Joshua.JPG)
+![](Joshua.jpg)
 
+---
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/bioscinema/biostatsymposium?tab=readme-ov-file
+---
