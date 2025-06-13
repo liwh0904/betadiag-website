@@ -1,0 +1,222 @@
+---
+title: "End-to-end demo: weighted UniFrac on IBD 16S data"
+#author: "Zihan Zhu, Yiqian Zhang, Wenhao Li and Liangliang Zhang"
+date: "2025-06-10"
+categories: [code, analysis]
+image: "DSC09100.jpg"
+---
+
+This is a post with executable code.
+
+```{r}
+# Install Betadiag (dev) and dependencies ---------------------------------
+# install.packages("devtools")
+library(devtools)
+#devtools::install_github("bioscinema/Betadiag")
+```
+
+```{r}
+## Using GitHub PAT from the git credential store.
+
+## Skipping install of 'Betadiag' from a github remote, the SHA1 (bf9bbd2c) has not changed since last install.
+##   Use `force = TRUE` to force installation
+```
+
+
+```{r}
+## Using GitHub PAT from the git credential store.
+
+## Skipping install of 'Betadiag' from a github remote, the SHA1 (bf9bbd2c) has not changed since last install.
+##   Use `force = TRUE` to force installation
+library(Betadiag)
+library(phyloseq)
+library(ggplot2)
+
+# Load dataset ------------------------------------------------------------
+load("RealData/IBD_16s_data_V4.RData")
+
+# ---- Data cleaning ------------------------------------------------------
+sample_data <- sample_data(phy1)
+rows_with_na <- apply(
+  sample_data[, c(1, 18, 50, 57, 115, 126, 127)],
+  1,
+  function(x) any(x %in% c("not providednot provided",
+                           "-88",
+                           "not provided",
+                           "cd (from uc 7/17/2018)"))
+)
+physeq <- prune_samples(!rows_with_na, phy1)
+
+metadata <- data.frame(
+  diagnosis         = as.factor(physeq@sam_data$diagnosis),
+  age_at_diagnosis  = as.numeric(physeq@sam_data$age_at__diagnosis),
+  host_age          = as.numeric(physeq@sam_data$host_age),
+  host_height       = as.numeric(physeq@sam_data$host_height),
+  race              = physeq@sam_data$race,
+  sex               = as.numeric(ifelse(physeq@sam_data$sex == "male", 1, 0)),
+  smoking           = as.numeric(ifelse(physeq@sam_data$smoking == "n", 0, 1))
+)
+
+# ---- Diagnostics --------------------------------------------------------
+wu_dist   <- phyloseq::distance(physeq, method = "wunifrac")
+wu_matrix <- as.matrix(wu_dist)
+
+wu.check <- check_distance(wu_matrix)
+wu.check$is.metric
+```
+
+```{r}
+wu.check$is.Euclidean
+```
+
+```{r}
+wu.check$FNI
+```
+
+```{r}
+plot(wu.check$collinearity.score,xlab = "Sample",ylab = "Collinearity Score") 
+```
+
+Collinearity plot – Every point sits at ≈ −1, meaning each sample’s distance vector is almost perfectly anti-parallel to the average vector. In practice, this indicates very little pairwise collinearity, so angle-preserving (metric) ordinations shouldn’t be distorted by redundant information.
+
+```{r}
+plot(wu.check$nonlinearity.score,xlab = "Sample",ylab = "Nonlinearity Score") 
+```
+
+Non-linearity plot – Scores vary widely, with several pronounced spikes, showing substantial non-linear distortion across samples. Linear methods such as classical PCoA may mis-represent true relationships; non-linear embeddings (t-SNE, UMAP) or a PSD remedy are advisable before interpretation.
+
+```{r}
+# ---- Baseline evaluation ------------------------------------------------
+wu.evalution <- evaluate_beta(
+  wu_matrix,
+  as.data.frame(metadata[, 1]),  # Y
+  as.data.frame(metadata[, -1]), # Z
+  metadata
+)
+wu.evalution$PCo1.rate
+```
+
+```{r}
+wu.evalution$PCo2.rate
+```
+
+```{r}
+wu.evalution$PCoA.valid
+```
+
+```{r}
+wu.evalution$pseudo_F
+```
+
+```{r}
+wu.evalution$pseudo_R2
+```
+
+```{r}
+wu.evalution$permanova_p
+```
+
+```{r}
+wu.evalution$MiRKAT_R2
+```
+
+```{r}
+# ---- Remedies -----------------------------------------------------------
+# Higham projection
+wu.higham           <- remedy_gram(wu_matrix, method = "Higham")
+wu.higham.evalution <- evaluate_beta_gram(
+  wu.higham,
+  as.data.frame(metadata[, 1]),
+  as.data.frame(metadata[, -1]),
+  metadata
+)
+wu.higham.evalution$PCo1.rate
+```
+
+```{r}
+wu.higham.evalution$PCo2.rate
+```
+
+```{r}
+wu.higham.evalution$PCoA.valid
+```
+
+```{r}
+wu.higham.evalution$pseudo_F
+```
+
+```{r}
+wu.higham.evalution$pseudo_R2
+```
+
+```{r}
+wu.higham.evalution$permanova_p
+```
+
+```{r}
+wu.higham.evalution$MiRKAT_R2
+```
+
+```{r}
+wu.higham.euclidean <- euclidean_check(wu.higham)
+wu.higham.euclidean
+```
+
+```{r}
+# Tikhonov ridge (ε = 0)
+wu.tik           <- remedy_gram(wu_matrix, method = "Tikhonov", epsilon = 0)
+wu.tik.evalution <- evaluate_beta_gram(
+  wu.tik,
+  as.data.frame(metadata[, 1]),
+  as.data.frame(metadata[, -1]),
+  metadata
+)
+wu.tik.evalution$PCo1.rate
+```
+
+```{r}
+wu.tik.evalution$PCo2.rate
+```
+
+```{r}
+wu.tik.evalution$PCoA.valid
+```
+
+```{r}
+wu.tik.evalution$pseudo_F
+```
+
+```{r}
+wu.tik.evalution$pseudo_R2
+```
+
+```{r}
+wu.tik.evalution$permanova_p
+```
+
+```{r}
+wu.tik.evalution$MiRKAT_R2
+```
+
+```{r}
+wu.tik.euclidean <- euclidean_check(wu.tik)
+wu.tik.euclidean
+```
+
+```{r}
+# ---- Quick comparison table --------------------------------------------
+data.frame(
+  Matrix      = c("Raw", "Higham", "Tikhonov"),
+  Euclidean   = c(wu.check$is.Euclidean,
+                  wu.higham.euclidean$is.Euclidean,
+                  wu.tik.euclidean$is.Euclidean),
+  Pseudo_R2   = c(wu.evalution$pseudo_R2,
+                  wu.higham.evalution$pseudo_R2,
+                  wu.tik.evalution$pseudo_R2),
+  PERM_pval   = c(wu.evalution$permanova_p,
+                  wu.higham.evalution$permanova_p,
+                  wu.tik.evalution$permanova_p)
+)
+```
+
+
