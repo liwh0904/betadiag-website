@@ -76,3 +76,147 @@ wu.check$FNI
 ```{r}
 plot(wu.check$collinearity.score,xlab = "Sample",ylab = "Collinearity Score") 
 ```
+
+Collinearity plot – Every point sits at ≈ −1, meaning each sample’s distance vector is almost perfectly anti-parallel to the average vector. In practice, this indicates very little pairwise collinearity, so angle-preserving (metric) ordinations shouldn’t be distorted by redundant information.
+
+```{r}
+plot(wu.check$nonlinearity.score,xlab = "Sample",ylab = "Nonlinearity Score") 
+```
+
+Non-linearity plot – Scores vary widely, with several pronounced spikes, showing substantial non-linear distortion across samples. Linear methods such as classical PCoA may mis-represent true relationships; non-linear embeddings (t-SNE, UMAP) or a PSD remedy are advisable before interpretation.
+
+```{r}
+# ---- Baseline evaluation ------------------------------------------------
+wu.evalution <- evaluate_beta(
+  wu_matrix,
+  as.data.frame(metadata[, 1]),  # Y
+  as.data.frame(metadata[, -1]), # Z
+  metadata
+)
+wu.evalution$PCo1.rate
+```
+
+```{r}
+wu.evalution$PCo2.rate
+```
+
+```{r}
+wu.evalution$PCoA.valid
+```
+
+```{r}
+wu.evalution$pseudo_F
+```
+
+```{r}
+wu.evalution$pseudo_R2
+```
+
+```{r}
+wu.evalution$permanova_p
+```
+
+```{r}
+wu.evalution$MiRKAT_R2
+```
+
+```{r}
+# ---- Remedies -----------------------------------------------------------
+# Higham projection
+wu.higham           <- remedy_gram(wu_matrix, method = "Higham")
+wu.higham.evalution <- evaluate_beta_gram(
+  wu.higham,
+  as.data.frame(metadata[, 1]),
+  as.data.frame(metadata[, -1]),
+  metadata
+)
+wu.higham.evalution$PCo1.rate
+```
+
+```{r}
+wu.higham.evalution$PCo2.rate
+```
+
+```{r}
+wu.higham.evalution$PCoA.valid
+```
+
+```{r}
+wu.higham.evalution$pseudo_F
+```
+
+```{r}
+wu.higham.evalution$pseudo_R2
+```
+
+```{r}
+wu.higham.evalution$permanova_p
+```
+
+```{r}
+wu.higham.evalution$MiRKAT_R2
+```
+
+```{r}
+wu.higham.euclidean <- euclidean_check(wu.higham)
+wu.higham.euclidean
+```
+
+```{r}
+# Tikhonov ridge (ε = 0)
+wu.tik           <- remedy_gram(wu_matrix, method = "Tikhonov", epsilon = 0)
+wu.tik.evalution <- evaluate_beta_gram(
+  wu.tik,
+  as.data.frame(metadata[, 1]),
+  as.data.frame(metadata[, -1]),
+  metadata
+)
+wu.tik.evalution$PCo1.rate
+```
+
+```{r}
+wu.tik.evalution$PCo2.rate
+```
+
+```{r}
+wu.tik.evalution$PCoA.valid
+```
+
+```{r}
+wu.tik.evalution$pseudo_F
+```
+
+```{r}
+wu.tik.evalution$pseudo_R2
+```
+
+```{r}
+wu.tik.evalution$permanova_p
+```
+
+```{r}
+wu.tik.evalution$MiRKAT_R2
+```
+
+```{r}
+wu.tik.euclidean <- euclidean_check(wu.tik)
+wu.tik.euclidean
+```
+
+```{r}
+# ---- Quick comparison table --------------------------------------------
+data.frame(
+  Matrix      = c("Raw", "Higham", "Tikhonov"),
+  Euclidean   = c(wu.check$is.Euclidean,
+                  wu.higham.euclidean$is.Euclidean,
+                  wu.tik.euclidean$is.Euclidean),
+  Pseudo_R2   = c(wu.evalution$pseudo_R2,
+                  wu.higham.evalution$pseudo_R2,
+                  wu.tik.evalution$pseudo_R2),
+  PERM_pval   = c(wu.evalution$permanova_p,
+                  wu.higham.evalution$permanova_p,
+                  wu.tik.evalution$permanova_p)
+)
+```
+
+
