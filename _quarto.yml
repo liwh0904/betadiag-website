@@ -5,15 +5,17 @@ project:
 website:
   title: "Betadiag"
   navbar:
+    logo: logo.png
     left:
       - href: index.qmd
         text: Home
-      - href: posts/Introduction/Introduction.qmd
+      - href: subpages/Introduction.qmd
         text: Introduction
-      - href: posts/Installation/Installation.qmd
+      - href: subpages/Installation.qmd
         text: Installation
-      - href: posts/post-with-code/Example_code.qmd
+      - href: subpages/Example_code.qmd
         text: End-to-end demo
+        
 
 format:
   html:
